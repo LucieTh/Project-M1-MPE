@@ -6,14 +6,14 @@ Pour répondre à la question posée, nous avons donc développé un programme q
 
 Nos critères sont les suivants :
 
-Le taux de caféine : l’utilisateur a le choix entre un café moyennement intense en caféine, fort en caféine ou intense en caféine
-La taille du café : 3 tailles sont proposées à l’utilisateur concernant le café qu’il souhaite : petit, moyen ou grand
-La saison : l’utilisateur choisit s’il souhaite boire son café en été, automne ou hiver, ou bien s’il souhaite un café adapté à toutes les saisons
-Température : l’utilisateur peut indiquer s’il préfère un café plutôt froid, chaud ou bien s’il est indifférent entre les deux
-Goût : nous avons ici fait le choix de distinguer les cafés amers et sucrés
-Quantité de lait : l’utilisateur a la possibilité de choisir s’il souhaite un café sans lait, avec peu de lait ou bien beaucoup
-Budget : l’utilisateur choisit son budget maximal
-Objectif : enfin, l’individu indique ce qu’il attend de son café. Il a donc le choix entre “Découverte” s’il souhaite simplement un café qui change un peu de son quotidien, “Productivité” s’il souhaite un café qui lui donne de l’énergie ou “Détente et social” si son objectif est simplement de se poser avec des amis autour d’un bon café.
+Le taux de caféine : l’utilisateur a le choix entre un café moyennement intense en caféine, fort en caféine ou intense en caféine.  
+La taille du café : 3 tailles sont proposées à l’utilisateur concernant le café qu’il souhaite : petit, moyen ou grand.  
+La saison : l’utilisateur choisit s’il souhaite boire son café en été, automne ou hiver, ou bien s’il souhaite un café adapté à toutes les saisons.  
+Température : l’utilisateur peut indiquer s’il préfère un café plutôt froid, chaud ou bien s’il est indifférent entre les deux.  
+Goût : nous avons ici fait le choix de distinguer les cafés amers et sucrés.  
+Quantité de lait : l’utilisateur a la possibilité de choisir s’il souhaite un café sans lait, avec peu de lait ou bien beaucoup.  
+Budget : l’utilisateur choisit son budget maximal.  
+Objectif : enfin, l’individu indique ce qu’il attend de son café. Il a donc le choix entre “Découverte” s’il souhaite simplement un café qui change un peu de son quotidien, “Productivité” s’il souhaite un café qui lui donne de l’énergie ou “Détente et social” si son objectif est simplement de se poser avec des amis autour d’un bon café.  
 
 Lors de la création de ce projet, nous avons renommé nos colonnes pour plus de lisibilité et nous avons créé une première fonction qui permet de poser des questions à l’utilisateur avec des choix de réponses prédéfinies, que nous avons ensuite classé dans l’ordre que nous souhaitions pour davantage de cohérence.
 
