@@ -2,7 +2,7 @@
 
 Notre projet vise à répondre à une question que beaucoup de Français se posent : quel café me correspond le plus ?
 
-Afin de pouvoir utiliser notre programme, il faut tout d’abord télécharger le script R fourni et avoir accès à la base de données. Cette base de données doit être télécharger sur RStudio. Vous devez également vous assurer que le package readxl est bien installé.
+Afin de pouvoir utiliser notre programme, il faut tout d’abord télécharger le script R fourni et avoir accès à la base de données. Cette base de données doit être téléchargée sur RStudio. Vous devez également vous assurer que le package readxl est bien installé.
 
 Pour répondre à la question posée, nous avons donc développé un programme qui interagit avec l’utilisateur en lui posant toute une série de questions basées sur les caractéristiques de chacun des cafés. L’idée principale de notre projet est qu’à partir des réponses de l’utilisateur aux 8 questions, le programme lui propose le café qui lui correspond le plus parmi un total de 30 options. 
 
