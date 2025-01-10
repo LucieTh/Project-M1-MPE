@@ -1,0 +1,253 @@
+---
+title: "Quel type de café vous correspond le plus ?"
+author: "BOURGEOIS Océane, FURRER Delphine, THUAU Lucie"
+date: "2024-12-29"
+output: html_document
+---
+
+
+```{r warning=FALSE, message=FALSE}
+rm(list = ls())
+library(readxl)
+
+
+# On commence par importer notre base de données
+donnees <- read_excel("C:/Users/Delph/Desktop/Delphine nouveau/MASTER MACRO ET PE/UE 6 Analyse de données/Base de donnée/base version 2.xlsx")
+View(donnees)
+
+# On renomme chacune des colonnes de notre base de données
+type <- donnees$`Nom du café`
+taux <- donnees$`Taux de cafeine`
+taille <- donnees$`Tailles disponibles`
+saison <- donnees$`Saisons disponibles`
+temp <- donnees$Température
+gout <- donnees$`Goût recherché`
+lait <- donnees$`Quantité de lait`
+budget <- donnees$`Budget moyen`
+obj <- donnees$`Objectif associé`
+lien <- donnees$`Lien internet`
+
+# Fonction pour poser des questions avec options prédéfinies
+definir_ordre <- function(variable, ordre) {
+  factor(variable, levels = ordre, ordered = TRUE)
+}
+
+fonction_question <- function(question, options) {
+  cat("\n", question, "\n")
+  for (i in seq_along(options)) {
+    cat(i, ":", options[i], "\n")
+  }
+  choix <- as.integer(readline(prompt = "Votre choix (numéro) : "))
+  if (is.na(choix) || choix < 1 || choix > length(options)) {
+    cat("Choix invalide. Veuillez réessayer.\n")
+    return(fonction_question(question, options))
+  }
+  return(options[choix])
+}
+
+# Fonction principale pour trouver le café le plus adapté
+jeu_cafe <- function() {
+  cat("Bienvenue dans le jeu des cafés !\n")
+
+  # On commence par classer dans l'ordre qu'on souhaite les réponses aux questions
+  taux_ordre <- c("Moyen (50-100 mg)", "Fort (100-200 mg)", "Intense (> 200 mg)")
+  taille_ordre <- c("Petit", "Moyen", "Grand")
+  saison_ordre <- c("Hiver", "Été", "Automne","Toutes saisons")
+  temp_ordre <- c("Froid", "Chaud", "Les 2")
+  gout_ordre <- c("Sucré", "Amer")
+  lait_ordre <- c("Pas du tout", "Un peu", "Beaucoup")
+  budget_ordre <- c("2", "2.5","3", "3.5", "4", "4.5", "5", "5.5", "6")
+  obj_ordre <- c("Découverte", "Productivité", "Détente & Social")
+
+  # On pose les questions à l'utilisateur concernant les caractéristiques qu'il souhaite pour son café
+  taux_choisi <- fonction_question("Quel niveau de caféine préférez-vous ?", taux_ordre)
+  taille_choisi <- fonction_question("Quelle taille de café souhaitez-vous ?", taille_ordre)
+  saison_choisi <- fonction_question("Pour quelle saison souhaitez-vous votre café ?", saison_ordre)
+  temp_choisi <- fonction_question("Quelle température préférez-vous ?", temp_ordre)
+  gout_choisi <- fonction_question("Quel goût préférez-vous pour votre café ?", gout_ordre)
+  lait_choisi <- fonction_question("Quelle quantité de lait souhaitez-vous dans votre café ?", lait_ordre)
+  budget_choisi <- fonction_question("Quel est votre budget maximum?", budget_ordre)
+  obj_choisi <- fonction_question("Quel est l'objectif lorsque vous achetez un café ?", obj_ordre)
+
+   # Logique pour le choix des tailles selon les réponses de l'utilisateur
+  tailles_correspondantes <- switch(
+    taille_choisi,
+    "Petit" = c("Petit", "Petit, Moyen", "Petit, Moyen, Grand"),
+    "Moyen" = c("Petit, Moyen", "Petit, Moyen, Grand"),
+    "Grand" = c("Petit, Moyen, Grand")
+  )
+  
+  # On stocke dans chacun des vecteurs les cafés qui correpondent à chacune des réponses de l'utilisateur
+  vecteur <- list()
+  vecteur$taux <- donnees$`Nom du café`[donnees$`Taux de cafeine` == taux_choisi]
+  vecteur$taille <- donnees$`Nom du café`[grepl(taille_choisi, donnees$`Tailles disponibles`, ignore.case = TRUE)]
+  vecteur$saison <- donnees$`Nom du café`[donnees$`Saisons disponibles` == saison_choisi]
+  vecteur$temp <- donnees$`Nom du café`[donnees$Température == temp_choisi]
+  vecteur$gout <- donnees$`Nom du café`[donnees$`Goût recherché` == gout_choisi]
+  vecteur$lait <- donnees$`Nom du café`[donnees$`Quantité de lait` == lait_choisi]
+  vecteur$budget <- donnees$`Nom du café`[donnees$`Budget moyen` == budget_choisi]
+  vecteur$obj <- donnees$`Nom du café`[donnees$`Objectif associé` == obj_choisi]
+
+  # On combine dans un unique vecteur l'ensemble des vecteurs précédents afin d'obtenir la fréquence d'apparition de chacun des cafés
+  vecteur_combine <- unlist(vecteur)
+  frequence_cafe <- table(vecteur_combine)
+  top_cafes <- sort(frequence_cafe, decreasing = TRUE)[1:3]
+
+  # On donne à l'individu son top 3 des cafés les plus adaptés à lui
+  cat("\nLes trois cafés qui vous correspondent le plus sont :\n")
+  for (i in seq_len(min(3, length(top_cafes)))) {
+    cat(names(top_cafes)[i],"\n")
+  }
+
+  # On affiche le café qui lui est le plus approprié
+  cafe_prefere <- names(top_cafes)[1]
+  gout_prefere <- donnees$`Goût recherché`[donnees$`Nom du café` == cafe_prefere][1]
+  lien_prefere <- donnees$`Lien internet`[donnees$`Nom du café` == cafe_prefere][1]
+  cat("\nVotre café préféré est :", cafe_prefere, ", un café", gout_prefere, "pour bien commencer votre journée!\n")
+  cat("Voici le lien pour en commander :", lien_prefere, "\n")
+  
+  # Poser la question de satisfaction
+repeat {
+  cat("\nEst-ce que vous êtes satisfait de vos cafés ou voulez-vous prioriser 2 critères ?\n")
+  cat("1: Oui, je suis satisfait\n")
+  cat("2: Non, je veux prioriser 2 critères\n")
+  satisfaction <- as.integer(readline(prompt = "Votre choix : "))
+  
+  # Gestion de la réponse
+  if (satisfaction == 1) {
+    cat("Super, bonne journée à vous !\n")
+    stop("Exécution terminée.")  # Arrête le script immédiatement après ce message
+  } else if (satisfaction == 2) {
+    cat("\nD'accord, passons maintenant à la définition de vos critères prioritaires.\n")
+    break  # Quitter la boucle pour continuer
+  } else {
+    cat("Entrée invalide. Merci de répondre avec 1 ou 2.\n")
+  }
+}
+
+  # Demander à l'utilisateur quels sont les 2 critères parmi les 8 qu'il souhaite absolument respecter
+  cat("\nParmi vos critères de choix (caféine, taille, saison, température, goût, lait, budget, objectif), veuillez sélectionner deux critères obligatoires que vous souhaitez respecter.\n")
+  
+  cat("1: Taux de caféine\n")
+  cat("2: Taille\n")
+  cat("3: Saison\n")
+  cat("4: Température\n")
+  cat("5: Goût\n")
+  cat("6: Quantité de lait\n")
+  cat("7: Budget\n")
+  cat("8: Objectif\n")
+  
+# Demander le premier critère
+critere1 <- as.integer(readline(prompt = "Choisir le premier critère à respecter (1-8) : "))
+
+# Vérification pour éviter un critère invalide
+while (!(critere1 %in% 1:8)) {
+  cat("Veuillez entrer un numéro valide entre 1 et 8.\n")
+  critere1 <- as.integer(readline(prompt = "Choisir le premier critère à respecter (1-8) : "))
+}
+
+# Demander le deuxième critère, différent du premier
+critere2 <- as.integer(readline(prompt = "Choisir le deuxième critère à respecter (1-8) : "))
+
+# Vérification pour éviter un critère invalide ou identique au premier
+while (!(critere2 %in% 1:8) || critere2 == critere1) {
+  if (critere2 == critere1) {
+    cat("Le deuxième critère doit être différent du premier.\n")
+  } else {
+    cat("Veuillez entrer un numéro valide entre 1 et 8.\n")
+  }
+  critere2 <- as.integer(readline(prompt = "Choisir le deuxième critère à respecter (1-8) : "))
+}
+
+
+ # Vérifier si les critères sont respectés pour le café préféré
+respecter_criteres <- function(cafe_prefere, critere1, critere2) {
+  res <- TRUE
+
+  # Vérification du critère 1
+  if (critere1 == 1 && donnees$`Taux de cafeine`[donnees$`Nom du café` == cafe_prefere][1] != taux_choisi) {
+    res <- FALSE
+  }
+  if (critere1 == 2 && !grepl(taille_choisi, donnees$`Tailles disponibles`[donnees$`Nom du café` == cafe_prefere][1], ignore.case = TRUE)) {
+    res <- FALSE
+  }
+  if (critere1 == 3 && donnees$`Saisons disponibles`[donnees$`Nom du café` == cafe_prefere][1] != saison_choisi) {
+    res <- FALSE
+  }
+  if (critere1 == 4 && donnees$Température[donnees$`Nom du café` == cafe_prefere][1] != temp_choisi) {
+    res <- FALSE
+  }
+  if (critere1 == 5 && donnees$`Goût recherché`[donnees$`Nom du café` == cafe_prefere][1] != gout_choisi) {
+    res <- FALSE
+  }
+  if (critere1 == 6 && donnees$`Quantité de lait`[donnees$`Nom du café` == cafe_prefere][1] != lait_choisi) {
+    res <- FALSE
+  }
+  if (critere1 == 7 && donnees$`Budget moyen`[donnees$`Nom du café` == cafe_prefere][1] != budget_choisi) {
+    res <- FALSE
+  }
+  if (critere1 == 8 && donnees$`Objectif associé`[donnees$`Nom du café` == cafe_prefere][1] != obj_choisi) {
+    res <- FALSE
+  }
+
+  # Vérification du critère 2
+  if (critere2 == 1 && donnees$`Taux de cafeine`[donnees$`Nom du café` == cafe_prefere][1] != taux_choisi) {
+    res <- FALSE
+  }
+  if (critere2 == 2 && !grepl(taille_choisi, donnees$`Tailles disponibles`[donnees$`Nom du café` == cafe_prefere][1], ignore.case = TRUE)) {
+    res <- FALSE
+  }
+  if (critere2 == 3 && donnees$`Saisons disponibles`[donnees$`Nom du café` == cafe_prefere][1] != saison_choisi) {
+    res <- FALSE
+  }
+  if (critere2 == 4 && donnees$Température[donnees$`Nom du café` == cafe_prefere][1] != temp_choisi) {
+    res <- FALSE
+  }
+  if (critere2 == 5 && donnees$`Goût recherché`[donnees$`Nom du café` == cafe_prefere][1] != gout_choisi) {
+    res <- FALSE
+  }
+  if (critere2 == 6 && donnees$`Quantité de lait`[donnees$`Nom du café` == cafe_prefere][1] != lait_choisi) {
+    res <- FALSE
+  }
+  if (critere2 == 7 && donnees$`Budget moyen`[donnees$`Nom du café` == cafe_prefere][1] != budget_choisi) {
+    res <- FALSE
+  }
+  if (critere2 == 8 && donnees$`Objectif associé`[donnees$`Nom du café` == cafe_prefere][1] != obj_choisi) {
+    res <- FALSE
+  }
+
+  return(res)
+}
+
+# Si le café préféré ne respecte les critères, afficher un nouveau top 1
+if (respecter_criteres(cafe_prefere, critere1, critere2)) {
+  lien_prefere <- donnees$`Lien internet`[donnees$`Nom du café` == cafe_prefere]
+  cat("\nVotre café préféré respecte vos critères obligatoires !\n")
+  cat("Voici le lien pour en commander :", lien_prefere, "\n")
+  cat("Merci d'avoir joué au jeu des cafés! \n")
+} else {
+  cat("\nVotre café préféré ne respecte pas vos critères. Voici un nouveau top 1 respectant vos critères :\n")
+  
+  # Rechercher un café qui respecte les deux critères
+  vecteur_combine <- unlist(vecteur)
+  frequence_cafe <- table(vecteur_combine)
+  top_cafes <- sort(frequence_cafe, decreasing = TRUE)[1:3]
+  
+  # Rechercher parmi les cafés du top ceux qui respectent les critères
+  cafes_respectant_criteres <- names(top_cafes)[sapply(names(top_cafes), function(cafe) respecter_criteres(cafe, critere1, critere2))]
+  
+  if (length(cafes_respectant_criteres) > 0) {
+    nouveau_cafe <- cafes_respectant_criteres[1]
+  lien_prefere <- donnees$`Lien internet`[donnees$`Nom du café` == nouveau_cafe]
+    cat("\nVotre nouveau café préféré est :", nouveau_cafe, "\n")
+    cat("Voici le lien pour en commander :", lien_prefere, "\n")
+    cat("Merci d'avoir joué au jeu des cafés! \n")
+  } else {
+    cat("\nDésolé, aucun café ne respecte vos critères obligatoires. Merci d'avoir joué au jeu des cafés ! \n")
+  }
+}
+}
+
+jeu_cafe()
+```
+
