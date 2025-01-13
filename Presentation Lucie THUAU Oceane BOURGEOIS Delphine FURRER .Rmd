@@ -32,7 +32,7 @@ Pour cela, nous avons commencé par réaliser une base de données contenant 30 
 
 - La quantité de lait  
 
-- Le prix  
+- Le prix moyen
 
 - L'objectif associé
 
