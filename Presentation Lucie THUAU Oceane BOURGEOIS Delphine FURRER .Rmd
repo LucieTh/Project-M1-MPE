@@ -127,7 +127,7 @@ Voici le lien pour en commander :
 https://www.maxicoffee.com/cold-brew-coffee-c-119_1353_675.html
 ```
 
-## Rajout d'une boucle 
+## Rajout de structures conditionnelles
 Les propositions de cafés ici sont basées sur les cafés qui correspondent au plus grand nombre de critères possibles. Mais peut-être pas aux critères qui vous tiennent le plus à cœur !
 
 Vous voulez absolument que votre café soit de taille "grande" et qu'il ait également un "fort" taux de caféine pour être au top pour une nuit blanche et réviser vos partiels ? 
